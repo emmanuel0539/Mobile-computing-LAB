@@ -1,0 +1,88 @@
+
+package com.example.mytelephonyapp
+
+import android.content.Intent
+import android.net.Uri
+import android.os.Bundle
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var txtPhoneNumber: TextView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContentView(R.layout.activity_main)
+
+        // Connect phone number display
+        txtPhoneNumber = findViewById(R.id.txtPhoneNumber)
+
+        // Connect number buttons
+        val buttons = listOf(
+            R.id.btn0 to "0",
+            R.id.btn1 to "1",
+            R.id.btn2 to "2",
+            R.id.btn3 to "3",
+            R.id.btn4 to "4",
+            R.id.btn5 to "5",
+            R.id.btn6 to "6",
+            R.id.btn7 to "7",
+            R.id.btn8 to "8",
+            R.id.btn9 to "9",
+            R.id.btnStar to "*",
+            R.id.btnHash to "#"
+        )
+
+        // Add click functionality
+        for ((buttonId, number) in buttons) {
+
+            val button = findViewById<Button>(buttonId)
+
+            button.setOnClickListener {
+                txtPhoneNumber.append(number)
+            }
+        }
+
+        // Delete last digit
+        val btnDelete = findViewById<Button>(R.id.btnDelete)
+
+        btnDelete.setOnClickListener {
+
+            val currentNumber = txtPhoneNumber.text.toString()
+
+            if (currentNumber.isNotEmpty()) {
+                txtPhoneNumber.text = currentNumber.dropLast(1)
+            }
+        }
+
+        // Open phone dialer
+        val btnCall = findViewById<Button>(R.id.btnCall)
+
+        btnCall.setOnClickListener {
+
+            val phoneNumber = txtPhoneNumber.text.toString()
+
+            if (phoneNumber.isNotEmpty()) {
+
+                val intent = Intent(
+                    Intent.ACTION_DIAL,
+                    Uri.parse("tel:$phoneNumber")
+                )
+
+                startActivity(intent)
+
+            } else {
+
+                Toast.makeText(
+                    this,
+                    "Please enter a phone number",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+}
